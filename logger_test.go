@@ -2,7 +2,6 @@ package log
 
 import (
 	"testing"
-	"time"
 )
 
 func TestConsole(t *testing.T) {
@@ -12,7 +11,7 @@ func TestConsole(t *testing.T) {
 
 	l := GetLogger()
 	//l.SetConfig(time.Local.String())
-	l.SetConfig("Asia/Chongqing")
+	l.SetConfig(INFO, "Asia/Chongqing")
 
 	l.Debug(`company`, "didi", "province", "beijing")
 	l.AddTextPrefix("method", "resUser")
