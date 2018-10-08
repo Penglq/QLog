@@ -1,4 +1,4 @@
-package log
+package QLog
 
 import (
 	"encoding/json"

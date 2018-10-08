@@ -1,7 +1,8 @@
-package log
+package test
 
 import (
 	"testing"
+	"github.com/Penglq/QLog"
 )
 
 func TestConsole(t *testing.T) {
@@ -9,9 +10,9 @@ func TestConsole(t *testing.T) {
 		A string
 	}{A: "it is a struct"}
 
-	l := GetLogger()
+	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
-	l.SetConfig(INFO, "Asia/Chongqing")
+	l.SetConfig(QLog.INFO, "Asia/Chongqing")
 
 	l.Debug(`company`, "didi", "province", "beijing")
 	l.AddTextPrefix("method", "resUser")
