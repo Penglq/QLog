@@ -98,7 +98,7 @@ func init() {
 
 func GetLogger() LoggerInterface {
 	if YRDLogger == nil {
-		YRDLogger = &logger{mu: new(sync.RWMutex), isConsole: true, nSize: 1, callDep: callDep}
+		YRDLogger = &logger{mu: new(sync.RWMutex), nSize: 1, callDep: callDep}
 	}
 	return YRDLogger
 }
@@ -136,7 +136,7 @@ func WithFileOPT(isFile bool, filepath, filename, filesuffix string, fileMaxSize
 	return func(l *logger) {
 		l.isFile = isFile
 		l.filePath = absolutePath(filepath)
-		l.filename = filename + UNDERSCODE
+		l.filename = filename
 		l.fileSuffix = DOT + filesuffix
 		l.fileMaxSize = fileMaxSize
 	}
@@ -184,11 +184,11 @@ func (l *logger) setLogger() {
 }
 
 func (l *logger) getFileFullName() string {
-	return l.filePath + "/" + l.filename + l._date.Format(_DATEFORMAT) + l.fileSuffix
+	return l.filePath + "/" + l.filename + UNDERSCODE + l._date.Format(_DATEFORMAT) + l.fileSuffix
 }
 
 func (l *logger) getSizeFileFullName() string {
-	return l.filePath + "/" + l.filename + l._date.Format(_DATEFORMAT) + DOT + strconv.Itoa(l.nSize) + l.fileSuffix
+	return l.filePath + "/" + l.filename + UNDERSCODE + l._date.Format(_DATEFORMAT) + DOT + strconv.Itoa(l.nSize) + l.fileSuffix
 }
 
 func (l *logger) openFile() {

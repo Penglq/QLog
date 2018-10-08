@@ -46,23 +46,10 @@ func GetCaller(calldepth int) (str string) {
 		line = 0
 	}
 	str = path.Base(file) + `:` + strconv.Itoa(line) + `:`
-	//var buf []byte
-	//l.formatHeader(&l.buf, now, file, line)
-	//l.buf = append(l.buf, s...)
-	//if len(s) == 0 || s[len(s)-1] != '\n' {
-	//	l.buf = append(l.buf, '\n')
-	//}
-	//_, err := l.out.Write(l.buf)
 	return
 }
 
-func (l *logger) formatHeader(buf *[]byte, t time.Time, file string, line int) {
-
-}
-
-// Cheap integer to fixed-width decimal ASCII. Give a negative width to avoid zero-padding.
 func Itoa(i int, wid int) string {
-	// Assemble decimal in reverse order.
 	var b [20]byte
 	bp := len(b) - 1
 	for i >= 10 || wid > 1 {
@@ -72,7 +59,6 @@ func Itoa(i int, wid int) string {
 		bp--
 		i = q
 	}
-	// i < 10
 	b[bp] = byte('0' + i)
 	return string(b[bp:])
 }
