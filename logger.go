@@ -20,16 +20,17 @@ var (
 )
 
 type LoggerConfig struct {
-	LogLevel    LEVEL
-	IsConsole   bool
-	IsFile      bool
-	FilePath    string
-	Filename    string
-	FileSuffix  string
-	FileMaxSize int64
-	AlertConf   AlertApiConfig
-	DateFormat  string
-	CallDep     int
+	LogLevel     LEVEL
+	IsConsole    bool
+	IsFile       bool
+	FilePath     string
+	Filename     string
+	FileSuffix   string
+	FileMaxSize  int64
+	FileMaxNSize int
+	AlertConf    AlertApiConfig
+	DateFormat   string
+	CallDep      int
 }
 
 type LoggerInterface interface {
@@ -53,6 +54,7 @@ type logger struct {
 	filename     string
 	fileSuffix   string
 	fileMaxSize  int64
+	fileMaxNSize int
 	fileCurrSize int64 //文件大小，字节
 
 	//日志前缀信息
@@ -122,23 +124,24 @@ func (l *logger) SetConfig(logLevel LEVEL, zone string, opts ...ConfigOption) {
 
 type ConfigOption func(*logger)
 
-func WithConsoleOPT(isConsole bool) ConfigOption {
+func WithConsoleOPT() ConfigOption {
 	return func(l *logger) {
-		l.isConsole = isConsole
+		l.isConsole = true
 	}
 }
 
-func WithFileOPT(isFile bool, filepath, filename, filesuffix string, fileMaxSize int64) ConfigOption {
+func WithFileOPT(filepath, filename, filesuffix string, fileMaxSize int64, fileMaxNSize int) ConfigOption {
 	strDefault(&filename, DEFAULTFILENAME)
 	strDefault(&filepath, DEFAULTFILEPATH)
 	strDefault(&filesuffix, DEFAULTFILESUFFIX)
 	int64Default(&fileMaxSize, DEFAULTFILEMAXSIZE)
 	return func(l *logger) {
-		l.isFile = isFile
+		l.isFile = true
 		l.filePath = absolutePath(filepath)
 		l.filename = filename
 		l.fileSuffix = DOT + filesuffix
 		l.fileMaxSize = fileMaxSize
+		l.fileMaxNSize = fileMaxNSize
 	}
 }
 
@@ -150,8 +153,9 @@ func WithAlertOPT(appId, URL, ContentType string) ConfigOption {
 		l.alertContentType = ContentType
 	}
 }
-func WithCommonOPT(cDep int, dateFormat, zoneSTR string) ConfigOption {
+func WithCommonOPT(cDep int, dateFormat string) ConfigOption {
 	return func(l *logger) {
+		l.callDep = cDep
 		l.dateFormat = dateFormat
 	}
 }
@@ -187,8 +191,8 @@ func (l *logger) getFileFullName() string {
 	return l.filePath + "/" + l.filename + UNDERSCODE + l._date.Format(_DATEFORMAT) + l.fileSuffix
 }
 
-func (l *logger) getSizeFileFullName() string {
-	return l.filePath + "/" + l.filename + UNDERSCODE + l._date.Format(_DATEFORMAT) + DOT + strconv.Itoa(l.nSize) + l.fileSuffix
+func (l *logger) getSizeFileFullName(num string) string {
+	return l.filePath + "/" + l.filename + UNDERSCODE + l._date.Format(_DATEFORMAT) + DOT + num + l.fileSuffix
 }
 
 func (l *logger) openFile() {
@@ -268,7 +272,7 @@ func (l *logger) write(v string) int {
 
 func (l *logger) fileCheck() {
 	defer catchError()
-	//如果同事满足一下条件，只会执行前者
+
 	if l.isMustRenameDate() {
 		l.renameDate()
 	}
@@ -315,14 +319,27 @@ func (l *logger) renameSize() {
 	defer l.mu.Unlock()
 	l.close()
 
-	//检测此文件是否已经存在
-	for isExists(l.getSizeFileFullName()) {
-		l.nSize++
+	// 检测此文件是否已经存在
+	num := 1
+	for isExists(l.getSizeFileFullName(strconv.Itoa(num))) {
+		//strconv.Itoa(l.nSize)
+		//l.nSize++
+		num ++
 	}
 
-	os.Rename(l.getFileFullName(), l.getSizeFileFullName())
+	// 删除大于fileMaxNSize的文件
+	for ; num > l.fileMaxNSize; num -- {
+		os.Remove(l.getSizeFileFullName(strconv.Itoa(num)))
+	}
+
+	// 重命名文件
+	for ; num > 1; num-- {
+		os.Rename(l.getSizeFileFullName(strconv.Itoa(num-1)), l.getSizeFileFullName(strconv.Itoa(num)))
+	}
+
+	os.Rename(l.getFileFullName(), l.getSizeFileFullName("1"))
 	l.openFile()
-	l.nSize += 1
+	l.nSize ++
 	l.flush()
 }
 
