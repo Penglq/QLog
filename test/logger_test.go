@@ -9,10 +9,13 @@ func TestFile(t *testing.T) {
 	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
 	l.SetConfig(QLog.INFO, "Asia/Chongqing",
-		QLog.WithFileOPT(true, "./", "info", "log", QLog.DEFAULTFILEMAXSIZE),
+		QLog.WithFileOPT("./", "info", "log", 1,10),
+		//QLog.WithFileOPT(true, "./", "info", "log", QLog.DEFAULTFILEMAXSIZE),
 	)
 
-	l.Info("name", "luqiang")
+	for i:=0;i<10;i++{
+		l.Info("次数->", i,"struct--------------------------------------------")
+	}
 }
 
 func TestConsole(t *testing.T) {
@@ -23,7 +26,7 @@ func TestConsole(t *testing.T) {
 	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
 	l.SetConfig(QLog.INFO, "Asia/Chongqing",
-		QLog.WithConsoleOPT(true),
+		QLog.WithConsoleOPT(),
 	)
 
 	l.Debug(`company`, "YRD", "province", "beijing")
