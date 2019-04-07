@@ -8,7 +8,7 @@ import (
 func TestFile(t *testing.T) {
 	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
-	l.SetConfig(QLog.INFO, "Asia/Chongqing",
+	l.SetConfig(QLog.INFO, "Asia/ShangHai",
 		QLog.WithFileOPT("./", "info", "log", 1, 10),
 		//QLog.WithFileOPT(true, "./", "info", "log", QLog.DEFAULTFILEMAXSIZE),
 	)
@@ -25,7 +25,7 @@ func TestConsole(t *testing.T) {
 
 	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
-	l.SetConfig(QLog.INFO, "Asia/Chongqing",
+	l.SetConfig(QLog.INFO, "",
 		QLog.WithConsoleOPT(),
 	)
 

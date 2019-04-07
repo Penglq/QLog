@@ -109,6 +109,7 @@ func (l *logger) SetConfig(logLevel LEVEL, zone string, opts ...ConfigOption) {
 	var err error
 	TimeLocation, err = time.LoadLocation(zone) // 时区
 	if err != nil {
+		fmt.Println(err)
 		TimeLocation, _ = time.LoadLocation("Local") // 时区
 	}
 

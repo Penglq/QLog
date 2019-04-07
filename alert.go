@@ -12,6 +12,7 @@ type AlertApiConfig struct {
 	URL         string
 	ContentType string
 	Format      string
+	IsAlert     bool
 }
 
 type alertApiData struct {
