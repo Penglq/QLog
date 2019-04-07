@@ -11,30 +11,14 @@ import (
 	"time"
 )
 
-type LEVEL int8
-
 var (
 	YRDLogger    LoggerInterface
 	ServerIp     string
 	TimeLocation *time.Location
 )
 
-type LoggerConfig struct {
-	LogLevel     LEVEL
-	IsConsole    bool
-	IsFile       bool
-	FilePath     string
-	Filename     string
-	FileSuffix   string
-	FileMaxSize  int64
-	FileMaxNSize int
-	AlertConf    AlertApiConfig
-	DateFormat   string
-	CallDep      int
-}
-
 type LoggerInterface interface {
-	SetConfig(LEVEL, string, ...ConfigOption)
+	SetConfig(uint8, string, ...ConfigOption)
 	SetTextPrefix(...interface{})
 	AddTextPrefix(...interface{})
 	Debug(v ...interface{})
@@ -46,7 +30,7 @@ type LoggerInterface interface {
 }
 
 type logger struct {
-	logLevel  LEVEL // 默认为0
+	logLevel  uint8 // 默认为0
 	isConsole bool  // false
 	isFile    bool  // false
 	//文件相关配置
@@ -105,7 +89,7 @@ func GetLogger() LoggerInterface {
 	return YRDLogger
 }
 
-func (l *logger) SetConfig(logLevel LEVEL, zone string, opts ...ConfigOption) {
+func (l *logger) SetConfig(logLevel uint8, zone string, opts ...ConfigOption) {
 	var err error
 	TimeLocation, err = time.LoadLocation(zone) // 时区
 	if err != nil {
@@ -231,7 +215,7 @@ func (l *logger) AlertWithLevel(alertLevel string, keyvals ...interface{}) {
 	l.log(TYPEALERT, ALERT, alertLevel, keyvals...)
 }
 
-func (l *logger) log(level string, _level LEVEL, alertLevel string, keyvals ...interface{}) {
+func (l *logger) log(level string, _level uint8, alertLevel string, keyvals ...interface{}) {
 	defer catchError()
 	if l.logLevel <= _level {
 		s := GetLogTextPrefix(l.callDep+1, l.dateFormat) +

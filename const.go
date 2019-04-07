@@ -11,7 +11,7 @@ const (
 )
 
 const (
-	ALL LEVEL = iota
+	ALL uint8 = iota
 	DEBUG
 	INFO
 	WARN
@@ -52,6 +52,6 @@ const (
 	COLOR_GREEN
 	COLOR_YELLOW
 	COLOR_BLUE
-	COLOR_MAGENTA //洋红
+	COLOR_MAGENTA  //洋红
 	COLOR_INTENSITY
 )
