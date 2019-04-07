@@ -324,11 +324,11 @@ func (l *logger) renameSize() {
 	for isExists(l.getSizeFileFullName(strconv.Itoa(num))) {
 		//strconv.Itoa(l.nSize)
 		//l.nSize++
-		num ++
+		num++
 	}
 
 	// 删除大于fileMaxNSize的文件
-	for ; num > l.fileMaxNSize; num -- {
+	for ; num > l.fileMaxNSize; num-- {
 		os.Remove(l.getSizeFileFullName(strconv.Itoa(num)))
 	}
 
@@ -339,7 +339,7 @@ func (l *logger) renameSize() {
 
 	os.Rename(l.getFileFullName(), l.getSizeFileFullName("1"))
 	l.openFile()
-	l.nSize ++
+	l.nSize++
 	l.flush()
 }
 

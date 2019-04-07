@@ -9,12 +9,12 @@ func TestFile(t *testing.T) {
 	l := QLog.GetLogger()
 	//l.SetConfig(time.Local.String())
 	l.SetConfig(QLog.INFO, "Asia/Chongqing",
-		QLog.WithFileOPT("./", "info", "log", 1,10),
+		QLog.WithFileOPT("./", "info", "log", 1, 10),
 		//QLog.WithFileOPT(true, "./", "info", "log", QLog.DEFAULTFILEMAXSIZE),
 	)
 
-	for i:=0;i<10;i++{
-		l.Info("次数->", i,"struct--------------------------------------------")
+	for i := 0; i < 10; i++ {
+		l.Info("次数->", i, "struct--------------------------------------------")
 	}
 }
 

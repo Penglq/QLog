@@ -11,7 +11,7 @@ const (
 )
 
 const (
-	ALL   LEVEL = iota
+	ALL LEVEL = iota
 	DEBUG
 	INFO
 	WARN
@@ -48,10 +48,10 @@ const (
 )
 const COLOR_TPL = "\x1b[%dm%s\x1b[0m"
 const (
-	COLOR_RED       = uint8(iota + 91)
+	COLOR_RED = uint8(iota + 91)
 	COLOR_GREEN
 	COLOR_YELLOW
 	COLOR_BLUE
-	COLOR_MAGENTA    //洋红
+	COLOR_MAGENTA //洋红
 	COLOR_INTENSITY
 )
