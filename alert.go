@@ -34,13 +34,13 @@ func (l *logger) alert(s string, priority string) {
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				l.Error("报警服务read body error", err.Error())
+				l.Error("alert service read body error", err.Error())
 			} else {
-				l.Info("报警服务返回body", string(body))
+				l.Info("alert service body", string(body))
 			}
 
 			if resp.StatusCode != http.StatusOK {
-				l.Info("报警服务http请求错误", resp.StatusCode, "body", string(body))
+				l.Info("alert service http error", resp.StatusCode, "body", string(body))
 			}
 		}
 	}
